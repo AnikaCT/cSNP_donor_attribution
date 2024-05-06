@@ -3,19 +3,19 @@ This repository contains details for the data processing and analysis of RNA/cDN
 All code examples are written in the context of processing RNA/cDNA FASTQ files, but the same code was also applied to gDNA data.
 Created as part of a Master of Science (MSc) thesis in Forensic Science at the University of Auckland.
 ## Contents:
-* [Quality checking](quality-checking)
-  * [FastQC](quality-check-of-raw-sequences-with-fastqc)
-  * [MultiQC](combine-fastqc-analyses-into-single-report-with-multiqc)
-  * [Adapter removal](adapter-removal)
-* [Mapping and counting reads](mapping-and-counting-reads)
-  * [Mapping reads with BWA](map-reads)
-  * [Processing SAM files](processing-sam-files)
-  * [Get mapping statistics](mapping-stats)
-  * [Count alignments with featureCounts](count-alignments)
-* [Plot alignment data](plot-alignment-data)
-* [Principal Component Analysis (PCA)](pca)
-* [Variant (cSNP) calling](variant-calling)
-* [Genotype analysis](genotype-analysis)
+* [Quality checking](#quality-checking)
+  * [FastQC](#quality-check-of-raw-sequences-with-fastqc)
+  * [MultiQC](#combine-fastqc-analyses-into-single-report-with-multiqc)
+  * [Adapter removal](#adapter-removal)
+* [Mapping and counting reads](#mapping-and-counting-reads)
+  * [Mapping reads with BWA](#map-reads)
+  * [Processing SAM files](#processing-sam-files)
+  * [Get mapping statistics](#mapping-stats)
+  * [Count alignments with featureCounts](#count-alignments)
+* [Plot alignment data](#plot-alignment-data)
+* [Principal Component Analysis (PCA)](#pca)
+* [Variant (cSNP) calling](#variant-calling)
+* [Genotype analysis](#genotype-analysis)
 ## Quality checking
 ### Quality check of raw sequences with FastQC
 All FASTQ files (forward/R1 and reverse/R2) were transferred to a raw directory and processed with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)

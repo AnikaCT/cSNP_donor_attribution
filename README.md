@@ -9,7 +9,7 @@ Created as part of a Master of Science (MSc) thesis in Forensic Science at the U
   * [Adapter removal](#adapter-removal)
 * [Mapping and counting reads](#mapping-and-counting-reads)
   * [Mapping reads with BWA](#map-reads)
-  * [Processing SAM files](#processing-sam-files)
+  * [Processing SAM files](#process-sam-files)
   * [Get mapping statistics](#mapping-stats)
   * [Count alignments with featureCounts](#count-alignments)
 * [Plot alignment data](#plot-alignment-data)

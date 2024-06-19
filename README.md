@@ -16,6 +16,7 @@ Created as part of a Master of Science (MSc) thesis in Forensic Science at the U
 * [Principal Component Analysis (PCA)](#pca)
 * [Variant (cSNP) calling](#variant-calling)
 * [Genotype analysis](#genotype-analysis)
+* [Bayesian Network analysis](#bayesian-network-analysis)
 ## Quality checking
 ### Quality check of raw sequences with FastQC
 All FASTQ files (forward/R1 and reverse/R2) were transferred to a raw directory and processed with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
@@ -131,14 +132,16 @@ write.csv(hits, "fc_cDNA", row.names = FALSE) #Create csv file
 #Further processing in MS Excel
 ```
 ## Plot alignment data
-Plot alignment data for each gene in R
+Plot alignment data for each gene in R using [ggplot2](https://ggplot2.tidyverse.org/), and arrange plots with [ggpubr](https://rpkgs.datanovia.com/ggpubr/)
 ```R
+#Load packages
+library(ggplot2)
+library(ggpubr)
 #Read in summarised specificity data for each gene
 df <- read.delim("~/R/Specificity_data.txt")
 #Assign colours for marker types
-colours <- c(Blood = "#C74F8A", Saliva = "#0563C1", Vaginal = "#477942", Skin = "#FFB000" )
+colours <- c(Blood = "#C74F8A", Saliva = "#0563C1", Vaginal = "#477942", Skin = "#FFB000")
 #Plot specificity data for blood samples with ggplot2
-library(ggplot2)
 Blood <- ggplot(df) + geom_col(aes(Gene, Blood, fill=Marker_Type),    
 	show.legend = FALSE) + ylab("Reads") + ggtitle("Blood") + 
 	theme(axis.text.x = element_text(angle = 90), 
@@ -151,14 +154,12 @@ Blood <- ggplot(df) + geom_col(aes(Gene, Blood, fill=Marker_Type),
 Blood
 #Repeat for each sample type - saliva, vaginal, and skin
 #Arrange plots together with ggpubr
-library(ggpubr)
 ggarrange(Blood, Saliva, Skin, Vaginal, nrow = 2, ncol = 2)
 ```
-Plot alignment data for each sample in R
+Plot alignment data for each sample in R using [ggplot2](https://ggplot2.tidyverse.org/), cleaned with [tidyr](https://tidyr.tidyverse.org/) and [gtools](https://github.com/cran/gtools)
 ```R
 #Load packages
 library(ggplot2)
-library(tidyverse)
 library(tidyr)
 library(gtools)
 library(ggpubr)
@@ -186,7 +187,7 @@ Blood
 ggarrange(Blood, Saliva, Skin, Vaginal, nrow = 2, ncol = 2)
 ```
 ## PCA
-Principal component analysis (PCA) in R using prcomp
+Principal component analysis (PCA) in R using [ggplot2](https://ggplot2.tidyverse.org/) and [ggfortify](https://github.com/sinhrks/ggfortify)
 ```R
 #Read in file with alignment data
 #Load packages
@@ -253,7 +254,7 @@ bcftools view -R position.txt RNA_filt.vcf.gz > cDNA_SNPs.vcf
 vcftools --vcf cDNA_SNPs.vcf --freq --out cDNA_SNPs
 ```
 ## Genotype analysis 
-Plot allele depth data for a given participant in R
+Plot allele depth data for a given participant in R with [ggplot2](https://ggplot2.tidyverse.org/)
 ```R
 #Load packages
 library(ggplot2)
@@ -297,3 +298,57 @@ Plot <- ggplot(df, aes(x=Total, y=Ratio)) +
 	theme(text = element_text(size = 15))
 Plot
 ```
+
+## Bayesian Network analysis
+Plot LR results in R with [ggplot2](https://ggplot2.tidyverse.org/) and [scales](https://scales.r-lib.org/) for every sample and hypothesis combination
+```R
+#Load packages
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
+library(scales)
+#Read in file with LR results for all blood samples
+df <- read.delim("~/R/BL_LR")
+#Organise data with tidyr
+df2 <- gather(df, key = "measure", value = "value", c("Other", "Blood", "Saliva", "Skin", "Vaginal"))
+#Remove NA values with tidyr
+df2 <- drop_na(df2)
+#Set order for categorical variables (blood, saliva, skin etc.)
+df2 <- df2[with(df2,order(measure)),]
+#Set colours
+colours <- c(Blood = "#C74F8A", Saliva = "#0563C1", Vaginal = "#477942", Skin = "#FFB000", Other = "#C895E4")
+#Plot using ggplot2, with horizontal line at LR = 1 and log10 Y axis
+Plot_BL <- ggplot(df2) + geom_col(aes(Sample, value, fill=fct_inorder(measure)), position = "dodge") +
+	ylab("Likelihood Ratio (LR)") + ggtitle("Hp: Blood") + theme(axis.text.x = element_text(angle = 90),
+	plot.title = element_text(hjust = 0.5), text = element_text(size = 15)) + scale_y_log10(breaks = log_breaks()) +
+	guides(fill=guide_legend(title="Hd")) + geom_hline(yintercept = 1) + scale_fill_manual(values=colours)
+Plot_BL     
+#Redo Y axis labels for log scale
+BL2 <- Plot_BL + scale_y_log10(breaks = sort(c(as.numeric(ggplot_build(Blood)$layout$panel_params[[1]]$y.labels), 1, 10, 100, 1000, 10000, 100000, 1000000)))
+BL2
+#Repeat for each sample type (saliva, skin, and vaginal)
+```
+Plot verbal equivalents in R
+```R
+#Load packages
+library(ggplot2)
+library(tidyr)
+library(tidyverse)
+library(scales)
+#Read in file with verbal equivalent data for all blood samples
+df <- read.delim("~/R/BL_verb")
+#Organise data with tidyverse
+df2 <- gather(df, key = "measure", value = "value", c("Other", "Saliva", "Skin", "Vaginal"))
+#Set order for categorical variables (blood, saliva, skin etc.)
+df2 <- df2[with(df2,order(measure)),]
+#Set colours
+colours <- c(Blood = "#C74F8A", Saliva = "#0563C1", Vaginal = "#477942", Skin = "#FFB000", Other = "#C895E4")
+#Plot using ggplot2
+BL_verb <- ggplot(df2) + geom_col(aes(fct_inorder(LR), value, fill=fct_inorder(measure)), position = "stack") +
+	ylab("Number of LR values") +xlab("")+ ggtitle("Hp: Blood") + theme(plot.title = element_text(hjust = 0.5),
+	text = element_text(size = 15)) + guides(fill=guide_legend(title="Hd")) + scale_fill_manual(values=colours) +
+	coord_flip()
+BL_verb
+#Repear for each sample type
+```
+

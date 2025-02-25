@@ -199,7 +199,7 @@ cDNA.pca <- prcomp(cDNA_PCA[,c(2:13)], center = TRUE, scale = TRUE)
 print(cDNA.pca)
 summary(cDNA.pca)
 #PCA plot 
-plot <- autoplot(cDNA.pca, data = cDNA_PCA,colour = 'Type’) + scale_color_manual(values = c("#C74F8A","#0563C1","#FFB000","#477942"))
+plot <- autoplot(cDNA.pca, data = cDNA_PCA,colour = 'Type') + scale_color_manual(values = c("#C74F8A","#0563C1","#FFB000","#477942"))
 plot
 #PCA plot with loadings 
 plot.load <- autoplot(cDNA.pca, data = cDNA_PCA,colour = 'Type',loadings=TRUE, loadings.label=TRUE, loadings.label.size=3.4, loadings.colour='black', loadings.label.hjust = 1.2, loadings.label.vjust = 0) + scale_color_manual(values = c("#C74F8A","#0563C1","#FFB000","#477942"))

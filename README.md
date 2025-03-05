@@ -349,6 +349,6 @@ BL_verb <- ggplot(df2) + geom_col(aes(fct_inorder(LR), value, fill=fct_inorder(m
 	text = element_text(size = 15)) + guides(fill=guide_legend(title="Hd")) + scale_fill_manual(values=colours) +
 	coord_flip()
 BL_verb
-#Repear for each sample type
+#Repeat for each sample type
 ```
 
